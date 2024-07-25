@@ -1,0 +1,30 @@
+---
+import { fetchPages } from '../lib/strapi';
+
+let pages = [];
+try {
+  pages = await fetchPages();
+} catch (error) {
+  console.error('Error fetching pages:', error);
+}
+---
+
+<nav>
+  <ul>
+    <li><a href="/">Home</a></li>
+    {pages.map((page) => (
+      <li><a href={`/${page.Slug}`}>{page.Title}</a></li>
+    ))}
+  </ul>
+</nav>
+
+<style>
+  nav ul {
+    list-style-type: none;
+    padding: 0;
+  }
+  nav ul li {
+    display: inline;
+    margin-right: 10px;
+  }
+</style>

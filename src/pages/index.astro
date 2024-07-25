@@ -1,0 +1,85 @@
+---
+import Layout from '../layouts/Layout.astro';
+import BookingForm from '../components/BookingForm.jsx';
+import { fetchPages } from '../lib/strapi';
+import 'react-datepicker/dist/react-datepicker.css';
+
+let destinations = [];
+try {
+  const pages = await fetchPages();
+  destinations = pages.filter(page => page.category === 'destination');
+} catch (error) {
+  console.error('Error fetching destinations:', error);
+}
+---
+
+<Layout title="Morocco Car Rentals - Find the Best Deals">
+  <div class="bg-gray-100 py-16">
+    <div class="container mx-auto px-4">
+      <h1 class="text-4xl font-bold text-center mb-8 text-gray-800">Find Your Perfect Car Rental in Morocco</h1>
+      <div class="bg-white p-4 rounded-lg shadow-md">
+        <BookingForm client:load />
+      </div>
+    </div>
+  </div>
+  
+  <section class="py-12">
+    <div class="container mx-auto px-4">
+      <h2 class="text-3xl font-semibold mb-8 text-center text-gray-800">Popular Destinations</h2>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        {destinations.length > 0 ? (
+          destinations.map((destination) => (
+            <div class="bg-white shadow-lg rounded-lg overflow-hidden">
+              <div class="p-6">
+                <h3 class="text-xl font-semibold mb-2">{destination.Title}</h3>
+                <p class="text-gray-600 mb-4">{destination.excerpt || 'Explore this beautiful destination in Morocco.'}</p>
+                <a href={`/${destination.Slug}`} class="text-blue-600 hover:text-blue-800 font-semibold">Learn more</a>
+              </div>
+            </div>
+          ))
+        ) : (
+          <>
+            <div class="bg-white shadow-lg rounded-lg overflow-hidden">
+              <div class="p-6">
+                <h3 class="text-xl font-semibold mb-2">Marrakech</h3>
+                <p class="text-gray-600 mb-4">Explore the vibrant markets and rich history of Marrakech.</p>
+                <a href="/marrakech" class="text-blue-600 hover:text-blue-800 font-semibold">Learn more</a>
+              </div>
+            </div>
+            <div class="bg-white shadow-lg rounded-lg overflow-hidden">
+              <div class="p-6">
+                <h3 class="text-xl font-semibold mb-2">Casablanca</h3>
+                <p class="text-gray-600 mb-4">Discover the modern face of Morocco in its largest city.</p>
+                <a href="/casablanca" class="text-blue-600 hover:text-blue-800 font-semibold">Learn more</a>
+              </div>
+            </div>
+            <div class="bg-white shadow-lg rounded-lg overflow-hidden">
+              <div class="p-6">
+                <h3 class="text-xl font-semibold mb-2">Fes</h3>
+                <p class="text-gray-600 mb-4">Step back in time in the medieval medina of Fes.</p>
+                <a href="/fes" class="text-blue-600 hover:text-blue-800 font-semibold">Learn more</a>
+              </div>
+            </div>
+          </>
+        )}
+      </div>
+    </div>
+  </section>
+</Layout>
+
+<style is:global>
+  /* Custom styles for react-datepicker */
+  .react-datepicker-wrapper {
+    width: 100%;
+  }
+  .react-datepicker__input-container input {
+    width: 100%;
+    padding: 0.5rem;
+    border: 1px solid #e2e8f0;
+    border-radius: 0.375rem;
+  }
+  .react-datepicker__time-container .react-datepicker__time .react-datepicker__time-box ul.react-datepicker__time-list {
+    padding-left: 0;
+    padding-right: 0;
+  }
+</style>
